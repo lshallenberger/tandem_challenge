@@ -1,6 +1,11 @@
 var fs = require("fs");
 var inquirer = require('inquirer');
+let p = 0;
+let score = 0;
+
 function inizio() {
+  p = 0;
+  score = 0;
   inquirer
   .prompt([
     {
@@ -13,32 +18,43 @@ function inizio() {
   ])
   .then(function(response) {
     if(response.username === "Practice Trivia") {
-      console.log("1")
+      get_data(true);
     }
     else if (response.username === "Add Trivia Questions") {
-      console.log("2")
+      // add_data();
+      console.log(2);
     }
     else if (response.username === "Remove Trivia Questions") {
-      console.log("3")
+      get_data(2);
     }
     else {
       console.log("Buh Bye");
     }
   });
 }
-function get_data() {
+function get_data(quiz) {
   fs.readFile("questions.json", "utf8", function(error, data) {
 
     if (error) {
      return console.log(error);
     }
-  
+    
     let questions = JSON.parse(data);
-    shuffle(questions);
-    return questions;
+    if (quiz === true) {
+      shuffle(questions);
+      trivia(questions);
+    }
+
+    else {
+      console.log("deletin time")
+    }
   });
-};
-let p = 0;
+}
+
+function add_data() {
+
+}
+
 function trivia(shuffled_questions) {
   let answers = shuffled_questions[p].incorrect;
   answers.push(shuffled_questions[p].correct)
@@ -47,20 +63,27 @@ function trivia(shuffled_questions) {
   .prompt([
     {
       type: "list",
-      message: pine[p].question,
+      message: shuffled_questions[p].question,
       choices: answers, 
       name: "username"
     }
     
   ])
   .then(function(response) {
-    if(response.username === pine[p].correct) {
+    if(response.username === shuffled_questions[p].correct && p < 10) {
       console.log("correct");
       p++;
-      inquire(pine)
+      score++;
+      trivia(shuffled_questions);
+    }
+    else if(p < 10) {
+      console.log("wrong! the correct answer is " + shuffled_questions[p].correct);
+      p++;
+      trivia(shuffled_questions);
     }
     else {
-      console.log("wrong");
+      console.log("your score is " + score);
+      inizio();
     }
   });
 };
