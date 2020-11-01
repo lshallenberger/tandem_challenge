@@ -48,7 +48,7 @@ function get_data(quiz) {
       add_data(questions);
     }
     else {
-      console.log("deletin time")
+      delete_data(questions);
     }
   });
 }
@@ -98,6 +98,35 @@ function add_data(current) {
     }
   
     console.log("Question Added!!");
+    inizio();
+    });
+  });
+}
+
+function delete_data(current) {
+  for(i = 0; i < current.length; i++) {
+    console.log(current[i].question + "  " + (i+1))
+  }
+
+  inquirer
+  .prompt([
+    {
+      type: "input",
+      name:"banana",
+      message:"Please select one of the above questions you want removed. (enter the corresponding number)"
+    }
+  ])
+  .then(function(response) {
+    let selectedQuestion = response.banana -1;
+    current.splice(selectedQuestion, 1);
+    current = JSON.stringify(current,null, 2);
+    fs.writeFile("questions.JSON", current, function(err) {
+
+    if (err) {
+      return console.log(err);
+    }
+  
+    console.log("Question Removed!!");
     inizio();
     });
   });
