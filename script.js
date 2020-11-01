@@ -21,11 +21,10 @@ function inizio() {
       get_data(true);
     }
     else if (response.username === "Add Trivia Questions") {
-      // add_data();
-      console.log(2);
+      get_data(false);
     }
     else if (response.username === "Remove Trivia Questions") {
-      get_data(2);
+      get_data();
     }
     else {
       console.log("Buh Bye");
@@ -44,15 +43,64 @@ function get_data(quiz) {
       shuffle(questions);
       trivia(questions);
     }
-
+    
+    else if (quiz === false) {
+      add_data(questions);
+    }
     else {
       console.log("deletin time")
     }
   });
 }
 
-function add_data() {
+function add_data(current) {
+  inquirer
+  .prompt([
+    {
+      type: "input",
+      name: "question",
+      message: "What is your question?"
+    },
+    {
+      type: "input",
+      name: "incorrecta",
+      message: "What is the first incorrect answer?"
+    },
+    {
+      type: "input",
+      name: "incorrectb",
+      message: "What is the second incorrect answer?"
+    },
+    {
+      type: "input",
+      name: "incorrectc",
+      message: "What is the third incorrect answer?"
+    },
+    {
+      type: "input",
+      name: "correct",
+      message: "What is the correct answer?"
+    }
+  ])
+  .then(function(response) {
+    let newQuestion = {    
+    question: response.question,
+    incorrect: [response.incorrecta, response.incorrectb, response.incorrectc],
+    correct: response.correct
+    };
+    let updated = current;
+    updated.push(newQuestion);
+    updated = JSON.stringify(updated,null, 2);
+    fs.writeFile("questions.JSON", updated, function(err) {
 
+    if (err) {
+      return console.log(err);
+    }
+  
+    console.log("Question Added!!");
+    inizio();
+    });
+  });
 }
 
 function trivia(shuffled_questions) {
