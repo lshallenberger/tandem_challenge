@@ -30,7 +30,8 @@ function inizio() {
       console.log("Buh Bye");
     }
   });
-}
+};
+
 function get_data(quiz) {
   fs.readFile("questions.json", "utf8", (error, data) => {
 
@@ -51,7 +52,49 @@ function get_data(quiz) {
       delete_data(questions);
     }
   });
-}
+};
+
+function trivia(shuffled_questions) {
+  let answers = shuffled_questions[p].incorrect;
+  answers.push(shuffled_questions[p].correct)
+  shuffle(answers);
+  inquirer
+  .prompt([
+    {
+      type: "list",
+      message: shuffled_questions[p].question,
+      choices: answers, 
+      name: "username"
+    }
+    
+  ])
+  .then( response => {
+    if(response.username === shuffled_questions[p].correct) {
+      p++;
+      score++;
+      console.log("correct");
+      if(p < 10) {
+        trivia(shuffled_questions);
+      }
+      else {
+        console.log("your final score is: " + score);
+        inizio();
+      }
+      
+    }
+    else {
+      console.log("wrong! the correct answer is " + shuffled_questions[p].correct);
+      p++;
+      if(p < 10) {
+        trivia(shuffled_questions);
+      }
+      else {
+        console.log("your final score is: " + score);
+        inizio();
+      }
+    }
+  });
+};
 
 function add_data(current) {
   inquirer
@@ -101,7 +144,7 @@ function add_data(current) {
     inizio();
     });
   });
-}
+};
 
 function delete_data(current) {
   for(i = 0; i < current.length; i++) {
@@ -130,39 +173,6 @@ function delete_data(current) {
     inizio();
     });
   });
-}
-
-function trivia(shuffled_questions) {
-  let answers = shuffled_questions[p].incorrect;
-  answers.push(shuffled_questions[p].correct)
-  shuffle(answers);
-  inquirer
-  .prompt([
-    {
-      type: "list",
-      message: shuffled_questions[p].question,
-      choices: answers, 
-      name: "username"
-    }
-    
-  ])
-  .then( response => {
-    if(response.username === shuffled_questions[p].correct && p < 10) {
-      console.log("correct");
-      p++;
-      score++;
-      trivia(shuffled_questions);
-    }
-    else if(p < 10) {
-      console.log("wrong! the correct answer is " + shuffled_questions[p].correct);
-      p++;
-      trivia(shuffled_questions);
-    }
-    else {
-      console.log("your score is " + score);
-      inizio();
-    }
-  });
 };
 
 function shuffle(array) {
@@ -175,6 +185,6 @@ function shuffle(array) {
   }
 
   return array;
-}
+};
 
 inizio();
