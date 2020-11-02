@@ -1,6 +1,6 @@
 Tandem Coding Challenge
   Challenge issued by Tandem, a Chicago based software development company, in 2020 for their Apprentice Software Engineer position
-  
+   
 Acceptance Criteria
 • A user can view questions.
 • Questions with their multiple choice options must be displayed one at a time.
