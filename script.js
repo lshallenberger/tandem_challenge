@@ -1,5 +1,5 @@
-var fs = require("fs");
-var inquirer = require('inquirer');
+const fs = require("fs");
+const inquirer = require('inquirer');
 let p = 0;
 let score = 0;
 
@@ -10,13 +10,13 @@ function inizio() {
   .prompt([
     {
       type: "list",
-      message: "ooga booga",
+      message: "Please select what you would like to do today",
       choices: ["Practice Trivia", "Add Trivia Questions", "Remove Trivia Questions", "Exit"],
       name: "username"
     }
     
   ])
-  .then(function(response) {
+  .then(response => {
     if(response.username === "Practice Trivia") {
       get_data(true);
     }
@@ -32,7 +32,7 @@ function inizio() {
   });
 }
 function get_data(quiz) {
-  fs.readFile("questions.json", "utf8", function(error, data) {
+  fs.readFile("questions.json", "utf8", (error, data) => {
 
     if (error) {
      return console.log(error);
@@ -82,7 +82,7 @@ function add_data(current) {
       message: "What is the correct answer?"
     }
   ])
-  .then(function(response) {
+  .then( response => {
     let newQuestion = {    
     question: response.question,
     incorrect: [response.incorrecta, response.incorrectb, response.incorrectc],
@@ -91,7 +91,7 @@ function add_data(current) {
     let updated = current;
     updated.push(newQuestion);
     updated = JSON.stringify(updated,null, 2);
-    fs.writeFile("questions.JSON", updated, function(err) {
+    fs.writeFile("questions.JSON", updated, err => {
 
     if (err) {
       return console.log(err);
@@ -116,11 +116,11 @@ function delete_data(current) {
       message:"Please select one of the above questions you want removed. (enter the corresponding number)"
     }
   ])
-  .then(function(response) {
+  .then( response => {
     let selectedQuestion = response.banana -1;
     current.splice(selectedQuestion, 1);
     current = JSON.stringify(current,null, 2);
-    fs.writeFile("questions.JSON", current, function(err) {
+    fs.writeFile("questions.JSON", current, err => {
 
     if (err) {
       return console.log(err);
@@ -146,7 +146,7 @@ function trivia(shuffled_questions) {
     }
     
   ])
-  .then(function(response) {
+  .then( response => {
     if(response.username === shuffled_questions[p].correct && p < 10) {
       console.log("correct");
       p++;
@@ -166,7 +166,7 @@ function trivia(shuffled_questions) {
 };
 
 function shuffle(array) {
-  var m = array.length, t, i;
+  let m = array.length, t, i;
   while (m) {
     i = Math.floor(Math.random() * m--);
     t = array[m];
